@@ -14,3 +14,35 @@ popolarità."""
 
 
 #nb se devi fare collegamento tra customer ed employee --> c.supportRepId = e.EmployeeId
+
+nodo: clienti che avevano fatto una fattura 
+
+select  distinct c.*
+from customer c , invoice i
+where c.CustomerId = i.CustomerId 
+
+due nodi sono collegati se hanno acquistato
+entrambi dallo stesso artista
+
+SELECT 
+    c1.CustomerId AS Da_NodoA, 
+    c2.CustomerId AS A_NodoB,
+    COUNT(c1.ArtistId) AS Peso_Arco
+FROM 
+    (SELECT DISTINCT c.CustomerId, a.ArtistId 
+     FROM invoice i, invoiceline il, track t, album a, customer c
+     WHERE i.InvoiceId = il.InvoiceId 
+       AND il.TrackId = t.TrackId 
+       AND t.AlbumId = a.AlbumId 
+       AND c.CustomerId = i.CustomerId) c1,
+    (SELECT DISTINCT c.CustomerId, a.ArtistId 
+     FROM invoice i, invoiceline il, track t, album a, customer c
+     WHERE i.InvoiceId = il.InvoiceId 
+       AND il.TrackId = t.TrackId 
+       AND t.AlbumId = a.AlbumId 
+       AND c.CustomerId = i.CustomerId) c2
+       
+WHERE c1.ArtistId = c2.ArtistId   
+  AND c1.CustomerId <> c2.CustomerId 
+
+GROUP BY c1.CustomerId, c2.CustomerId
