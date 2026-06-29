@@ -46,3 +46,26 @@ WHERE c1.ArtistId = c2.ArtistId
   AND c1.CustomerId <> c2.CustomerId 
 
 GROUP BY c1.CustomerId, c2.CustomerId
+
+
+
+clienti che avevano fatto una fattura in un dato paese
+peso di fatturazione di ogni cliente da memorizzare nella dataclass come attributo di cliente
+
+select c.CustomerId, c.FirstName, c.LastName, SUM(i.Total) AS TotalFatturato
+from customer c, invoice i
+where c.CustomerId = i.CustomerId
+and i.BillingCountry = "USA"
+group by c.CustomerId, c.FirstName, c.LastName
+
+
+
+collego due archi se hanno un artista in comune e il peso è la somma dei due fatturati
+
+select distinct c.CustomerId, al.ArtistId
+from customer c, invoice i, invoiceline il, track t, album al
+where c.CustomerId = i.CustomerId
+and  i.InvoiceId = il.InvoiceId
+and il.TrackId = t.TrackId
+and t.AlbumId = al.AlbumId
+and i.BillingCountry = "USA"
